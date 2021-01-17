@@ -2,6 +2,7 @@ import secrets
 import pyaes
 import hashlib
 import getpass
+
 class Shamir:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
     
@@ -20,9 +21,6 @@ class Shamir:
         docstring
         """
     def encriptar(archivo):
-        contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
-        contrasena = hashlib.sha256(contrasena.encode())
-        K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         pass
     
     
@@ -31,6 +29,10 @@ class Shamir:
     """
     def cifrar(lista_argumentos):
         archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
+
+        contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+        contrasena = hashlib.sha256(contrasena.encode())
+        K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         
         pass
     
