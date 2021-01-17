@@ -45,4 +45,5 @@ class Shamir:
         pass
     
     def descrifrar():
+        a = 1
         pass
