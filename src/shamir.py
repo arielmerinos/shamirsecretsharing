@@ -8,13 +8,9 @@ import Encripta
 class Shamir:
     
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
-<<<<<<< HEAD
     pad = lambda s: s + (32 - len(s) % 32) * chr(32 - len(s) % 32)
     unpad = lambda s: s[:-ord(s[len(s) - 1:])]
     
-
-=======
->>>>>>> 542c9a8826e752965b3eb5dccedc06338ecf3b6b
 
     """
     Genera numéros aletorioss de 256 bits, siempre encargándose de que dicho número sea menor al módulo primo
@@ -26,7 +22,6 @@ class Shamir:
             numero_aleatorio = secrets.randbits
             
         return numero_aleatorio
-<<<<<<< HEAD
     
     """
     Se encarga de encriptar un archivo y pedir la contrase-a
@@ -37,7 +32,6 @@ class Shamir:
         print(contrasena)
         return contrasena
 
-=======
 
     """
     Genera una lista de coeficientes de 256 bits para un polinomio de grado t-1 y el secreto
@@ -64,7 +58,6 @@ class Shamir:
     """
     def encriptar(archivo):
         pass
->>>>>>> 542c9a8826e752965b3eb5dccedc06338ecf3b6b
     
     
     """
@@ -72,17 +65,12 @@ class Shamir:
     """
     def cifrar(self, lista_argumentos):
         archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
-<<<<<<< HEAD
-        key = Shamir.encode_contrasena()
+        # key = Shamir.encode_contrasena()
+        # enc = Encripta(key)
+        # enc.encrypt_file(archivo)
+        # print(key)
         
-        enc = Encripta(key)
-        enc.encrypt_file(archivo)
-        print(key)
-        
-        
-        pass
-=======
-        #contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+        contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
         contrasena = "Armando"
         contrasena = hashlib.sha256(contrasena.encode())
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
@@ -94,7 +82,6 @@ class Shamir:
         print(coordenadas_evaluaciones)
         return  coordenadas_evaluaciones
         #pass￼
->>>>>>> 542c9a8826e752965b3eb5dccedc06338ecf3b6b
     
     def descrifrar():
         a = 1
