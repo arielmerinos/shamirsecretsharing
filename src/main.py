@@ -64,9 +64,8 @@ def main():
     list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
         print('el proceso es: crifrar')
-        numero = Shamir.genera_coeficientes()
-        print(numero)
-        print(Shamir._primo)
+        print(list_argumentos)
+        Shamir.cifrar(list_argumentos)
         
         
         
