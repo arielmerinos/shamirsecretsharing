@@ -5,21 +5,29 @@ import getpass
 
 class Shamir:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
-    
+
     """
     Genera numéros aletorioss de 256 bits, siempre encargándose de que dicho número sea menor al módulo primo
     """
-    def genera_coeficientes():
+    def genera_coeficientes(self):
         numero_aleatorio = secrets.randbits(256)
         
         while(numero_aleatorio > Shamir._primo):
             numero_aleatorio = secrets.randbits
             
         return numero_aleatorio
-    
-        """
-        docstring
-        """
+
+    """
+    Genera una lista de coeficientes de 256 bits para un polinomio de grado t-1 y el secreto
+    """
+    def coeficientes_del_polinomio(self,t, secreto):
+        coeficientes = [self.genera_coeficientes() for _ in range(t - 1)]
+        coeficientes.append(secreto)
+        print(coeficientes)
+
+    """
+    docstring
+    """
     def encriptar(archivo):
         pass
     

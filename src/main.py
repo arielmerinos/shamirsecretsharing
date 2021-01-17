@@ -60,6 +60,8 @@ def extract_arg():
     
 
 def main():
+    secreto = Shamir()
+    secreto.coeficientes_del_polinomio(3,717879)
     print("Hola mundo")
     list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
@@ -68,11 +70,12 @@ def main():
         print(numero)
         print(Shamir._primo)
         
-        
+
         
     elif(len(list_argumentos) == 2):
         print('el proceso es descrifrar')
     else:
-        exit()    
+        exit()
+
 if __name__ == "__main__":
     main()
