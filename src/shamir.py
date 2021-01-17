@@ -57,10 +57,10 @@ class Shamir:
         coordenadas_evaluaciones = []
         for i in range(1,evaluaciones + 1):
             x = self.genera_coeficientes()
-            coordenadas_evaluaciones.append([x, self.Metodo_de_Horner(x, coeficientes)])
+            coordenadas_evaluaciones.append((x, self.Metodo_de_Horner(x, coeficientes)))
         print(coordenadas_evaluaciones)
         return  coordenadas_evaluaciones
-        #pass
+        #pass￼
     
     def descrifrar():
         a = 1
