@@ -23,7 +23,7 @@ class Shamir:
     def coeficientes_del_polinomio(self,t, secreto):
         coeficientes = [self.genera_coeficientes() for _ in range(t - 1)]
         coeficientes.append(secreto)
-        print(coeficientes)
+        #print(coeficientes)
         return coeficientes
 
     """
@@ -33,8 +33,8 @@ class Shamir:
         resultado = coeficientes[0]
         for i in range(1, len(coeficientes)):
             resultado = resultado * x + coeficientes[i]
-        print(resultado)
-        return resultado
+        #print(resultado)
+        return resultado % Shamir._primo
 
 
     """
@@ -47,14 +47,20 @@ class Shamir:
     """
     la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
     """
-    def cifrar(lista_argumentos):
+    def cifrar(self, lista_argumentos):
         archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
-        contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+        #contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+        contrasena = "Armando"
         contrasena = hashlib.sha256(contrasena.encode())
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
-
-        
-        pass
+        coeficientes = self.coeficientes_del_polinomio(necesarios, K)
+        coordenadas_evaluaciones = []
+        for i in range(1,evaluaciones + 1):
+            x = self.genera_coeficientes()
+            coordenadas_evaluaciones.append([x, self.Metodo_de_Horner(x, coeficientes)])
+        print(coordenadas_evaluaciones)
+        return  coordenadas_evaluaciones
+        #pass
     
     def descrifrar():
         a = 1
