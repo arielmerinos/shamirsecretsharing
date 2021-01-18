@@ -1,7 +1,7 @@
 import secrets
 import hashlib
 import base64
-from Crypto import Random as rnd
+from Crypto import Random
 import Crypto.Cipher as AES
 import getpass
 import os
