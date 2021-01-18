@@ -59,8 +59,8 @@ class Shamir:
     def Metodo_de_Horner(x,coeficientes):
         resultado = coeficientes[0]
         for i in range(1, len(coeficientes)):
-            resultado = resultado * x + coeficientes[i]
-        return resultado % Shamir._primo
+            resultado = (((resultado * x) % Shamir._primo) + coeficientes[i]) % Shamir._primo
+        return resultado
 
 
     """
@@ -76,14 +76,12 @@ class Shamir:
     def cifrar(lista_argumentos):
         try:
             archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
-            necesarios_num = int(necesarios)
-            evaluaciones_num = int(evaluaciones)
             contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
             contrasena = hashlib.sha256(contrasena.encode())
             K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
-            coeficientes = Shamir.coeficientes_del_polinomio(necesarios_num, K)
+            coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
             coordenadas_evaluaciones = []
-            for i in range(1, evaluaciones_num + 1):
+            for i in range(1, evaluaciones + 1):
                 x = Shamir.genera_coeficientes()
                 coordenadas_evaluaciones.append((x, Shamir.Metodo_de_Horner(x, coeficientes)))
 
@@ -93,7 +91,6 @@ class Shamir:
                 guardar_evaluciones.write(str(coordenada))
             guardar_evaluciones.close()
             return guardar_evaluciones
-
         except FileNotFoundError:
             print("El archivo "+contrasenas+" no existe")
     

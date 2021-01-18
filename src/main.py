@@ -25,10 +25,11 @@ def extract_arg():
         if(proceso == "-c"):
             archivo_por_cifrar = argv[2]
             contrasenas_guardar = argv[3]
-            necesarios = argv[4]
-            evaluaciones = argv[5]
-            return [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
-             
+            necesarios = int(argv[4])
+            evaluaciones = int(argv[5])
+            if((contrasenas_guardar.lower()[-4:] == ".txt") and (evaluaciones > 2) and (necesarios > 1) and (necesarios <= evaluaciones) ):
+                return [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
+
         elif(proceso == "-d"):
             archivo_por_descifrar = argv[2]
             contrasenas = argv[3]
@@ -55,7 +56,7 @@ def extract_arg():
         print("Ingresa los argumentos completos, encontrarás ayuda corriendo el programa con -h ")
         exit()
     else:
-        print("error")
+        print("Error.")
         exit()     
     
 
@@ -72,9 +73,6 @@ def main():
         print('el proceso es: crifrar')
         print(list_argumentos)
         Shamir.cifrar(list_argumentos)
-        
-
-        
     elif(len(list_argumentos) == 2):
         print('el proceso es descrifrar')
     else:
