@@ -51,7 +51,6 @@ class Shamir:
     def coeficientes_del_polinomio(t, secreto):
         coeficientes = [Shamir.genera_coeficientes() for _ in range(t - 1)]
         coeficientes.append(secreto)
-        #print(coeficientes)
         return coeficientes
 
     """
@@ -61,7 +60,6 @@ class Shamir:
         resultado = coeficientes[0]
         for i in range(1, len(coeficientes)):
             resultado = resultado * x + coeficientes[i]
-        #print(resultado)
         return resultado % Shamir._primo
 
 
@@ -76,24 +74,28 @@ class Shamir:
     la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
     """
     def cifrar(lista_argumentos):
-        archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
-        necesarios_num = int(necesarios)
-        evaluaciones_num = int(evaluaciones)
-        contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
-        contrasena = hashlib.sha256(contrasena.encode())
-        K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
-        coeficientes = Shamir.coeficientes_del_polinomio(necesarios_num, K)
-        coordenadas_evaluaciones = []
-        for i in range(1,evaluaciones_num + 1):
-            x = Shamir.genera_coeficientes()
-            coordenadas_evaluaciones.append((x, Shamir.Metodo_de_Horner(x, coeficientes)))
+        try:
+            archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
+            necesarios_num = int(necesarios)
+            evaluaciones_num = int(evaluaciones)
+            contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+            contrasena = hashlib.sha256(contrasena.encode())
+            K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
+            coeficientes = Shamir.coeficientes_del_polinomio(necesarios_num, K)
+            coordenadas_evaluaciones = []
+            for i in range(1, evaluaciones_num + 1):
+                x = Shamir.genera_coeficientes()
+                coordenadas_evaluaciones.append((x, Shamir.Metodo_de_Horner(x, coeficientes)))
 
-        guardar_evaluciones = open(Shamir.verifica_archivo(contrasenas), "w")
-        for coordenada in coordenadas_evaluaciones:
-            guardar_evaluciones.write(str(coordenada))
-        guardar_evaluciones.close()
-        return  guardar_evaluciones
+            archivo_validado = Shamir.verifica_archivo(contrasenas)
+            guardar_evaluciones = open(archivo_validado, "w")
+            for coordenada in coordenadas_evaluaciones:
+                guardar_evaluciones.write(str(coordenada))
+            guardar_evaluciones.close()
+            return guardar_evaluciones
 
+        except FileNotFoundError:
+            print("El archivo "+contrasenas+" no existe")
     
     def descrifrar():
         a = 1
