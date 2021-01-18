@@ -61,11 +61,11 @@ def extract_arg():
 
 def main():
     secreto = Shamir()
+    list_argumentos = extract_arg()
     #secreto.coeficientes_del_polinomio(3,717879)
     #secreto.Metodo_de_Horner(2,[3,2,1])
     secreto.cifrar([1,1,2,3])
     print("Hola mundo")
-    list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
         print('el proceso es: crifrar')
         print(list_argumentos)
