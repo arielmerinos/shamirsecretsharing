@@ -76,9 +76,15 @@ class Shamir:
     def cifrar(lista_argumentos):
         try:
             archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
+            
             contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+            """
+            Nos encargamos de usar el algoritmo de hashing
+            """
             contrasena = hashlib.sha256(contrasena.encode())
+            
             K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
+            
             coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
             coordenadas_evaluaciones = []
             for i in range(1, evaluaciones + 1):
