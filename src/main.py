@@ -68,10 +68,9 @@ def main():
     #secreto.verifica_archivo("Prueba.txt")
     #secreto.cifrar([1,1,2,3])
     print("Hola mundo")
-    #list_argumentos = extract_arg()
+    list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
         print('el proceso es: crifrar')
-        print(list_argumentos)
         Shamir.cifrar(list_argumentos)
     elif(len(list_argumentos) == 2):
         print('el proceso es descrifrar')
