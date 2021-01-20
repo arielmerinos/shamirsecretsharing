@@ -111,5 +111,5 @@ class Shamir:
         lista_yi = []
         for j in range(len(lista_contrasenas)):
             lista_yi.append(lista_contrasenas[j][1])
-
-        print(lista_yi)
+        clave = InterpolacionLagrange.lagrangeCero(lista_argumentos, lista_xi, lista_yi)
+        print(clave)

@@ -5,6 +5,24 @@ import random
 class InterpolacionLagrange:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
 
+    def inverso_perro(numero):
+        p = 208351617316091241234326746312124448251235562226470491514186331217050270460481
+        modulo = p
+        NUM = numero
+        MOD = p
+        x, x_old = 0, 1
+        y, y_old = 1, 0
+        while modulo:
+            div = numero // modulo
+            numero, modulo = modulo, numero % modulo
+            x, x_old = x_old - div * x, x
+            y, y_old = y_old - div * y, y
+        if numero != 1:
+            print("\nNO MI. However, the GCD of %d and %d is %u\n" % (NUM, MOD, numero))
+        else:
+            res = (x_old + MOD) % MOD
+            return res
+
     def get_inverso(num):
         NUM = num
         modulito = InterpolacionLagrange._primo
