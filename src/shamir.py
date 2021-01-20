@@ -1,6 +1,7 @@
 import secrets
 import hashlib
 import os
+from decimal import *
 import base64
 from Crypto import Random as rnd
 import Crypto.Cipher as AES
@@ -81,7 +82,6 @@ class Shamir:
         
         
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
-        
         coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
 
         coordenadas_evaluaciones = []
@@ -91,5 +91,13 @@ class Shamir:
 
         Shamir.escribir_txt(coordenadas_evaluaciones, contrasenas)
     
-    def descrifrar():
-        pass
+    def descrifrar(lista_argumentos):
+        archivo_descifrar, contresenas = lista_argumentos
+        archivo = open(contresenas, "r")
+        leer_archivo = archivo.read()
+        lista_contrasenas = leer_archivo.splitlines()
+        archivo.close()
+        print(lista_contrasenas)
+        #print(lista_contrasenas)
+        #a = 1
+        #pass
