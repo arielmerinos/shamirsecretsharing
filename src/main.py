@@ -33,7 +33,8 @@ def extract_arg():
         elif(proceso == "-d"):
             archivo_por_descifrar = argv[2]
             contrasenas = argv[3]
-            return [archivo_por_descifrar, contrasenas]
+            if (contrasenas.lower().endswith(".txt")):
+                return [archivo_por_descifrar, contrasenas]
                       
         elif(proceso == "-h"):
             print("\nSecreto compartido de shamir")
