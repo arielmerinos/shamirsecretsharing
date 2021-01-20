@@ -1,16 +1,9 @@
-import secrets
-import hashlib
-import base64
 from Crypto import Random
-import Crypto.Cipher as AES
-import getpass
+from Crypto.Cipher import AES
 import os
 import os.path
-from os import listdir
-from os.path import isfile, join
-import time
 
-class Encripta:
+class Encriptador:
     def __init__(self, key):
         self.key = key
 
@@ -44,11 +37,4 @@ class Encripta:
         with open(file_name[:-4], 'wb') as fo:
             fo.write(dec)
         os.remove(file_name)
-
-
-
-# key = b'[EX\xc8\xd5\xbfI{\xa2$\x05(\xd5\x18\xbf\xc0\x85)\x10nc\x94\x02)j\xdf\xcb\xc4\x94\x9d(\x9e'
-# enc = Encryptor(key)
-clear = lambda: os.system('cls')
-
 

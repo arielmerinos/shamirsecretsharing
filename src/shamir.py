@@ -5,6 +5,7 @@ import base64
 from Crypto import Random as rnd
 import Crypto.Cipher as AES
 import getpass
+from Encriptados import Encriptador
 
 class Shamir:
     
@@ -49,12 +50,6 @@ class Shamir:
             resultado = (((resultado * x) % Shamir._primo) + coeficientes[i]) % Shamir._primo
         return resultado
 
-
-    """
-    docstring
-    """
-    def encriptar(archivo):
-        pass
     
     def escribir_txt(lista, archivo):
         modo = 'a' if os.path.exists(archivo) else 'w+'
@@ -62,6 +57,8 @@ class Shamir:
         for elemento in lista:
             archivo.write(str(elemento)+"\n")
         archivo.close()
+        
+        
     """
     la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
     """
@@ -70,10 +67,18 @@ class Shamir:
         archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
         
         contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
+       
         """
         Nos encargamos de usar el algoritmo de hashing
         """
         contrasena = hashlib.sha256(contrasena.encode())
+        
+        """
+        Se encarga de encriptar el archivo q fantasía
+        """
+        enc = Encriptador(contrasena.digest())
+        enc.encrypt_file(archivo)
+        
         
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         
@@ -87,5 +92,4 @@ class Shamir:
         Shamir.escribir_txt(coordenadas_evaluaciones, contrasenas)
     
     def descrifrar():
-        a = 1
         pass
