@@ -2,7 +2,7 @@ from Crypto import Random
 from Crypto.Cipher import AES
 import os
 import os.path
-
+import hashlib
 class Encriptador:
     def __init__(self, key):
         self.key = key
@@ -37,4 +37,7 @@ class Encriptador:
         with open(file_name[:-4], 'wb') as fo:
             fo.write(dec)
         os.remove(file_name)
+        
+    def convierte_llave(self, llave):
+        return hashlib.sha256(llave).digest()
 

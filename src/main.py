@@ -1,5 +1,6 @@
 from sys import argv
 from shamir import Shamir
+from Encriptados import Encriptador
 
 class color:
     PURPLE = '\033[95m'

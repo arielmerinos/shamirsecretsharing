@@ -7,6 +7,8 @@ from Crypto import Random as rnd
 import Crypto.Cipher as AES
 import getpass
 from Encriptados import Encriptador
+import re
+from InterpolacionLagrange import InterpolacionLagrange
 
 class Shamir:
     
@@ -93,11 +95,16 @@ class Shamir:
     
     def descrifrar(lista_argumentos):
         archivo_descifrar, contresenas = lista_argumentos
+        coordenadas = []
+        evaluaciones = []
         archivo = open(contresenas, "r")
-        leer_archivo = archivo.read()
-        lista_contrasenas = leer_archivo.splitlines()
+        for line in archivo.readlines():
+            line = line.rstrip() # This will remove all the whitespaces at the end of the line
+            line = line.split(',')
+            coordenadas.append(int(re.sub("[^0-9]", "", line[0])))
+            evaluaciones.append(int(re.sub("[^0-9]", "", line[1])))
         archivo.close()
-        print(lista_contrasenas)
-        #print(lista_contrasenas)
-        #a = 1
-        #pass
+
+
+        llave = InterpolacionLagrange.lagrangeCero(InterpolacionLagrange,coordenadas, evaluaciones)
+        
