@@ -54,10 +54,11 @@ class Shamir:
     
     def escribir_txt(lista, archivo):
         modo = 'a' if os.path.exists(archivo) else 'w+'
-        archivo = open(archivo, modo)
+        archivo2 = open(archivo, modo)
         for elemento in lista:
-            archivo.write(str(elemento)+"\n")
-        archivo.close()
+            archivo2.write(str(elemento)+"\n")
+        os.renames(archivo,archivo+".s4")
+        archivo2.close()
         
         
     """
