@@ -1,6 +1,7 @@
 import secrets
 import hashlib
 import os
+import random
 from decimal import *
 import base64
 from Crypto import Random as rnd
@@ -83,7 +84,7 @@ class Shamir:
         
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
-
+        print(K)
         coordenadas_evaluaciones = []
         for i in range(1, evaluaciones + 1):
             punto_aleatorio = Shamir.genera_coeficientes()
@@ -95,9 +96,15 @@ class Shamir:
         archivo_descifrar, contresenas = lista_argumentos
         archivo = open(contresenas, "r")
         leer_archivo = archivo.read()
-        lista_contrasenas = leer_archivo.splitlines()
+        cadena_contrasenas = leer_archivo.splitlines()
         archivo.close()
-        print(lista_contrasenas)
-        #print(lista_contrasenas)
-        #a = 1
-        #pass
+
+        lista_contrasenas = [eval(elemento) for elemento in cadena_contrasenas]
+        t = random.randrange(2, len(lista_contrasenas))
+        necesarios_secreto_original = random.sample(lista_contrasenas, t)
+
+        print(necesarios_secreto_original)
+        print(len(necesarios_secreto_original))
+
+
+
