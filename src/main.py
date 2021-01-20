@@ -74,6 +74,7 @@ def main():
         Shamir.cifrar(list_argumentos)
     elif(len(list_argumentos) == 2):
         print('el proceso es descrifrar')
+        Shamir.descrifrar(list_argumentos)
     else:
         exit()
 

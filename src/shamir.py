@@ -62,6 +62,7 @@ class Shamir:
         for elemento in lista:
             archivo.write(str(elemento)+"\n")
         archivo.close()
+
     """
     la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
     """
@@ -86,6 +87,12 @@ class Shamir:
 
         Shamir.escribir_txt(coordenadas_evaluaciones, contrasenas)
     
-    def descrifrar():
-        a = 1
-        pass
+    def descrifrar(lista_argumentos):
+        archivo_descifrar, contresenas = lista_argumentos
+        archivo = open(contresenas, "r")
+        leer_archivo = archivo.read()
+        lista_contrasenas = leer_archivo.splitlines()
+        archivo.close()
+        print(lista_contrasenas)
+        #a = 1
+        #pass
