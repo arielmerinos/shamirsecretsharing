@@ -27,7 +27,7 @@ def extract_arg():
             contrasenas_guardar = argv[3]
             necesarios = int(argv[4])
             evaluaciones = int(argv[5])
-            if((contrasenas_guardar.lower()[-4:] == ".txt") and (evaluaciones > 2) and (necesarios > 1) and (necesarios <= evaluaciones) ):
+            if((contrasenas_guardar.lower().endswith(".txt")) and (evaluaciones > 2) and (necesarios > 1) and (necesarios <= evaluaciones) ):
                 return [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
 
         elif(proceso == "-d"):

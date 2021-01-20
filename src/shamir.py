@@ -1,6 +1,7 @@
 import secrets
 import hashlib
 import os
+from decimal import *
 import base64
 from Crypto import Random as rnd
 import Crypto.Cipher as AES
@@ -77,7 +78,6 @@ class Shamir:
         contrasena = hashlib.sha256(contrasena.encode())
         
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
-        
         coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
 
         coordenadas_evaluaciones = []
@@ -94,5 +94,6 @@ class Shamir:
         lista_contrasenas = leer_archivo.splitlines()
         archivo.close()
         print(lista_contrasenas)
+        #print(lista_contrasenas)
         #a = 1
         #pass
