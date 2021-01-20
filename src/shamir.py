@@ -1,6 +1,7 @@
 import secrets
 import hashlib
 import os
+import random
 from decimal import *
 import base64
 from Crypto import Random as rnd
@@ -85,7 +86,7 @@ class Shamir:
         
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
-
+        print(K)
         coordenadas_evaluaciones = []
         for i in range(1, evaluaciones + 1):
             punto_aleatorio = Shamir.genera_coeficientes()
@@ -98,13 +99,16 @@ class Shamir:
         coordenadas = []
         evaluaciones = []
         archivo = open(contresenas, "r")
-        for line in archivo.readlines():
-            line = line.rstrip() # This will remove all the whitespaces at the end of the line
-            line = line.split(',')
-            coordenadas.append(int(re.sub("[^0-9]", "", line[0])))
-            evaluaciones.append(int(re.sub("[^0-9]", "", line[1])))
+        leer_archivo = archivo.read()
+        cadena_contrasenas = leer_archivo.splitlines()
         archivo.close()
 
+        lista_contrasenas = [eval(elemento) for elemento in cadena_contrasenas]
+        t = random.randrange(2, len(lista_contrasenas))
+        necesarios_secreto_original = random.sample(lista_contrasenas, t)
 
-        llave = InterpolacionLagrange.lagrangeCero(InterpolacionLagrange,coordenadas, evaluaciones)
-        
+        print(necesarios_secreto_original)
+        print(len(necesarios_secreto_original))
+
+
+
