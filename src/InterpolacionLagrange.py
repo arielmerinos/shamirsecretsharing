@@ -5,49 +5,22 @@ import random
 class InterpolacionLagrange:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
 
-    def inverso_perro(numero):
-        p = 208351617316091241234326746312124448251235562226470491514186331217050270460481
-        modulo = p
+    def inverso_perro(self, numero):
+        modulo = self._primo
         NUM = numero
-        MOD = p
-        x, x_old = 0, 1
-        y, y_old = 1, 0
+        MOD = self._primo
+        x, x_original = 0, 1
+        y, y_original = 1, 0
         while modulo:
             div = numero // modulo
             numero, modulo = modulo, numero % modulo
-            x, x_old = x_old - div * x, x
-            y, y_old = y_old - div * y, y
+            x, x_original = x_original - div * x, x
+            y, y_original = y_original - div * y, y
         if numero != 1:
             print("\nNO MI. However, the GCD of %d and %d is %u\n" % (NUM, MOD, numero))
         else:
-            res = (x_old + MOD) % MOD
+            res = (x_original + MOD) % MOD
             return res
-
-    def get_inverso(num):
-        NUM = num
-        modulito = InterpolacionLagrange._primo
-        x, x_old = 0, 1
-
-        y, y_old = 1, 0
-
-        while InterpolacionLagrange._primo:
-            q = num // InterpolacionLagrange._primo
-
-            num, InterpolacionLagrange._primo = InterpolacionLagrange._primo, num % InterpolacionLagrange._primo
-
-            x, x_old = x_old - q * x, x
-
-            y, y_old = y_old - q * y, y
-
-        if num != 1:
-
-            print("\nNO MI. However, the GCD of %d and %d is %u\n" % (NUM, InterpolacionLagrange._primo, num))
-
-        else:
-
-            inverso = (x_old + InterpolacionLagrange._primo) % InterpolacionLagrange._primo
-            # print("\nMI of %d modulo %d is: %d\n" % (NUM, MOD, MI))
-            return inverso
 
     """
     Método para obtener los Li de la ecuación del método de interpolación de Lagrange
@@ -56,7 +29,7 @@ class InterpolacionLagrange:
     @return: Polinomio Li(x)
     """
 
-    def li(i_i, coeficientes_x):
+    def li(self,i_i, coeficientes_x):
 
         denominador = 1
         numerador = 1
@@ -68,9 +41,9 @@ class InterpolacionLagrange:
 
                 denominador *= int(i_i - coeficientes_x[j])
 
-        numerador = numerador % InterpolacionLagrange._primo
+        numerador = numerador % self._primo
 
-        denominador = InterpolacionLagrange.get_inverso(denominador % InterpolacionLagrange._primo)
+        denominador = self.inverso_perro(denominador % self._primo)
 
         return (numerador * denominador) % self._primo
 
@@ -79,13 +52,19 @@ class InterpolacionLagrange:
     @param: vector con las x_i
     @param: vector con las y_i
     @return: Polinomio de lagrange generado por la intepolación
+    
+    
+    
+    PARA PRUEBAAAAAAAAAS
+    x _i =[1, 3, 7]
+    y_i = [17, 65, 221]
     '''
 
     def lagrangeCero(self, x_i, y_i):  # vectores = [(0, 1), (1, 3), (2, 0)]
         suma = 0
 
         for i in range(0, len(x_i)):
-            pol = InterpolacionLagrange.li(x_i[i], x_i) % self._primo
+            pol = self.li(x_i[i], x_i) % self._primo
             y_i[i] = y_i[i] % self._primo
             producto = (pol * y_i[i]) % self._primo
 
