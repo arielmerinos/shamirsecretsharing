@@ -79,7 +79,9 @@ class Shamir:
         Nos encargamos de usar el algoritmo de hashing
         """
         contrasena = hashlib.sha256(contrasena.encode())
-
+        print("Esta es la contra")
+        print(contrasena.digest())
+        print("fin")
         """
         Se encarga de encriptar el archivo q fantasía
         """
@@ -111,5 +113,9 @@ class Shamir:
         lista_yi = []
         for j in range(len(lista_contrasenas)):
             lista_yi.append(lista_contrasenas[j][1])
-        clave = InterpolacionLagrange.lagrangeCero(lista_argumentos, lista_xi, lista_yi)
-        print(clave)
+        lg = InterpolacionLagrange()
+        clave = lg.lagrangeCero(lista_xi, lista_yi)
+        
+        K = hashlib.sha256(str(clave).encode('utf8')).digest()
+        enc = Encriptador(K)
+        enc.decrypt_file(archivo_descifrar)

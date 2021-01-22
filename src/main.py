@@ -69,19 +69,16 @@ def main():
     #secreto.Metodo_de_Horner(2,[3,2,1])
     #secreto.verifica_archivo("Prueba.txt")
     #secreto.cifrar([1,1,2,3])
-    print("Hola mundo")
-    lg = InterpolacionLagrange()
-    print(lg.lagrangeCero([1, 3, 7], [17, 53, 221]))
 
-    # list_argumentos = extract_arg()
-    # if(len(list_argumentos) == 4):
-    #     print('el proceso es: crifrar')
-    #     Shamir.cifrar(list_argumentos)
-    # elif(len(list_argumentos) == 2):
-    #     print('el proceso es descrifrar')
-    #     Shamir.descrifrar(list_argumentos)
-    # else:
-    #     exit()
+    list_argumentos = extract_arg()
+    if(len(list_argumentos) == 4):
+        print('el proceso es: crifrar')
+        Shamir.cifrar(list_argumentos)
+    elif(len(list_argumentos) == 2):
+        print('el proceso es descrifrar')
+        Shamir.descrifrar(list_argumentos)
+    else:
+        exit()
 
 if __name__ == "__main__":
     main()
