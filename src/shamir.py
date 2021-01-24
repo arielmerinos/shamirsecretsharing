@@ -11,16 +11,30 @@ from Encriptados import Encriptador
 import re
 from InterpolacionLagrange import InterpolacionLagrange
 
-
+"""
+Esta clase se encarga de manejar e integrar la técnica de shamir secret sharing scheme, haciendo uso de SHA y AES256
+"""
 class Shamir:
+    """
+    Guardaremos en esta variable el número primo de 257 bites 
+    """
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
+    
+    
+    """
+    Este método sirve para normalizar en bloques de 32 bytes nuestro archivo
+    """
     pad = lambda s: s + (32 - len(s) % 32) * chr(32 - len(s) % 32)
+    
+    """
+    Este método nos sirve para desnormalizar nuestro archivo.
+    """
     unpad = lambda s: s[:-ord(s[len(s) - 1:])]
+
 
     """
     Genera numéros aletorioss de 256 bits, siempre encargándose de que dicho número sea menor al módulo primo y que no sea 0
     """
-
     def genera_coeficientes():
         numero_aleatorio = secrets.randbits(256)
 
@@ -29,10 +43,10 @@ class Shamir:
 
         return numero_aleatorio
 
+
     """
     Se encarga de encriptar un archivo y pedir la contrase-a
     """
-
     def encode_contrasena():
         contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
         contrasena = hashlib.sha256(contrasena.encode()).digest()
@@ -67,8 +81,8 @@ class Shamir:
 
     """
     la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
+    toma los argumentos desde la terminal y los transforma en 
     """
-
     def cifrar(lista_argumentos):
 
         archivo, contrasenas, necesarios, evaluaciones = lista_argumentos
@@ -79,12 +93,13 @@ class Shamir:
         Nos encargamos de usar el algoritmo de hashing
         """
         contrasena = hashlib.sha256(contrasena.encode())
-        print("Esta es la contra")
+        print("Esta es la contra:::")
         print(contrasena.digest())
         print("fin")
         """
         Se encarga de encriptar el archivo q fantasía
         """
+        print("Así se la pasamos a AES para cifrar,  ", contrasena.digest())
         enc = Encriptador(contrasena.digest())
         enc.encrypt_file(archivo)
 
@@ -98,6 +113,11 @@ class Shamir:
 
         Shamir.escribir_txt(coordenadas_evaluaciones, contrasenas)
 
+
+    """
+    Toma la lista de argumentos desde la terminal, los usa para desencriptar usando el método de langrange para interpolar el polinomio original 
+    
+    """
     def descrifrar(lista_argumentos):
         archivo_descifrar, contresenas = lista_argumentos
         coordenadas = []
@@ -115,7 +135,10 @@ class Shamir:
             lista_yi.append(lista_contrasenas[j][1])
         lg = InterpolacionLagrange()
         clave = lg.lagrangeCero(lista_xi, lista_yi)
-        
+        print("Esta es la clave descrifrada: ", clave)
         K = hashlib.sha256(str(clave).encode('utf8')).digest()
+        print("Esta es como se la pasamos a AES: ", K)
         enc = Encriptador(K)
         enc.decrypt_file(archivo_descifrar)
+        
+        

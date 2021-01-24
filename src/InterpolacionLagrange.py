@@ -5,6 +5,9 @@ import random
 class InterpolacionLagrange:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
 
+    """
+    Este método calcula el inverso de un número en un Zp
+    """
     def inverso_perro(self, numero):
         modulo = self._primo
         NUM = numero
@@ -17,7 +20,7 @@ class InterpolacionLagrange:
             x, x_original = x_original - div * x, x
             y, y_original = y_original - div * y, y
         if numero != 1:
-            print("\nNO MI. However, the GCD of %d and %d is %u\n" % (NUM, MOD, numero))
+            break
         else:
             res = (x_original + MOD) % MOD
             return res
@@ -52,7 +55,6 @@ class InterpolacionLagrange:
     @param: vector con las x_i
     @param: vector con las y_i
     @return: Polinomio de lagrange generado por la intepolación
-    
     
     
     PARA PRUEBAAAAAAAAAS

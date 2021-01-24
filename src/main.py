@@ -3,6 +3,9 @@ from shamir import Shamir
 from Encriptados import Encriptador
 from InterpolacionLagrange import InterpolacionLagrange
 
+"""
+Se encarga de administrar el formato que podemos ponerle a una cadena dentro de la terminal
+"""
 class color:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
@@ -19,7 +22,6 @@ class color:
     Se encarga de recibir los argumentos en la terminal y manejar cualquier error por parte del usuario, al proveer indicaciones.
     Regresa los valores necesarios para la ejecución en cada caso.
 """
-
 def extract_arg():
     try:
         proceso = argv[1]
@@ -62,14 +64,10 @@ def extract_arg():
         print("Error.")
         exit()     
     
-
+"""
+Este método maneja el primer contacto con el programa, bifurca su comportamiento en función del número de argumentos pasados en la terminal para su ejecución
+"""
 def main():
-    #secreto = Shamir()
-    #secreto.coeficientes_del_polinomio(3,717879)
-    #secreto.Metodo_de_Horner(2,[3,2,1])
-    #secreto.verifica_archivo("Prueba.txt")
-    #secreto.cifrar([1,1,2,3])
-
     list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
         print('el proceso es: crifrar')
