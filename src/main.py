@@ -1,7 +1,5 @@
 from sys import argv
 from shamir import Shamir
-from Encriptados import Encriptador
-from InterpolacionLagrange import InterpolacionLagrange
 
 """
 Se encarga de administrar el formato que podemos ponerle a una cadena dentro de la terminal
@@ -70,10 +68,8 @@ Este método maneja el primer contacto con el programa, bifurca su comportamient
 def main():
     list_argumentos = extract_arg()
     if(len(list_argumentos) == 4):
-        print('el proceso es: crifrar')
         Shamir.cifrar(list_argumentos)
     elif(len(list_argumentos) == 2):
-        print('el proceso es descrifrar')
         Shamir.descrifrar(list_argumentos)
     else:
         exit()

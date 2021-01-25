@@ -1,14 +1,11 @@
 import secrets
 import hashlib
 import os
-import random
 from decimal import *
-import base64
 from Crypto import Random as rnd
 import Crypto.Cipher as AES
 import getpass
 from Encriptados import Encriptador
-import re
 from InterpolacionLagrange import InterpolacionLagrange
 
 """
@@ -49,9 +46,7 @@ class Shamir:
     """
     def encode_contrasena():
         contrasena = getpass.getpass("Ingresa la contrseña para cifrar el archivo: ")
-        contrasena = hashlib.sha256(contrasena.encode()).digest()
-        print(contrasena)
-        return contrasena
+        return hashlib.sha256(contrasena.encode()).digest()
 
     """
     Genera una lista de coeficientes de 256 bits para un polinomio de grado t-1 y el secreto
@@ -93,19 +88,14 @@ class Shamir:
         Nos encargamos de usar el algoritmo de hashing
         """
         contrasena = hashlib.sha256(contrasena.encode())
-        print("Esta es la contra:::")
-        print(contrasena.digest())
-        print("fin")
         """
         Se encarga de encriptar el archivo q fantasía
         """
-        print("Así se la pasamos a AES para cifrar,  ", contrasena.digest())
         enc = Encriptador(contrasena.digest())
         enc.encrypt_file(archivo)
 
         K = int(contrasena.hexdigest(), 16)  # contrasena con sha y en decimales
         coeficientes = Shamir.coeficientes_del_polinomio(necesarios, K)
-        print(K)
         coordenadas_evaluaciones = []
         for i in range(1, evaluaciones + 1):
             punto_aleatorio = Shamir.genera_coeficientes()
@@ -120,12 +110,12 @@ class Shamir:
     """
     def descrifrar(lista_argumentos):
         archivo_descifrar, contresenas = lista_argumentos
-        coordenadas = []
-        evaluaciones = []
+        
         archivo = open(contresenas, "r")
         leer_archivo = archivo.read()
         cadena_contrasenas = leer_archivo.splitlines()
         archivo.close()
+        
         lista_contrasenas = [eval(elemento) for elemento in cadena_contrasenas]
         lista_xi = []
         for i in range(len(lista_contrasenas)):
@@ -133,12 +123,12 @@ class Shamir:
         lista_yi = []
         for j in range(len(lista_contrasenas)):
             lista_yi.append(lista_contrasenas[j][1])
+        
         lg = InterpolacionLagrange()
         clave = lg.lagrangeCero(lista_xi, lista_yi)
-        print("Esta es la clave descrifrada: ", clave)
-        K = hashlib.sha256(str(clave).encode('utf8')).digest()
-        print("Esta es como se la pasamos a AES: ", K)
+        K = (clave).to_bytes(32, byteorder='big')
         enc = Encriptador(K)
         enc.decrypt_file(archivo_descifrar)
+        print("Mensaje descifrado.")
         
         

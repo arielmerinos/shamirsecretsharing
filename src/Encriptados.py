@@ -2,7 +2,6 @@ from Crypto import Random
 from Crypto.Cipher import AES
 import os
 import os.path
-import hashlib
 """
 Esta clase está diseñada para interactuar con AES, exclusivamente en encriptar y desencriptar archivos
 """
@@ -57,9 +56,3 @@ class Encriptador:
             fo.write(dec)
         os.remove(file_name)
         
-    """
-    Este método busca pasar de una llave decimal a auna llave en bytes para administrase en descifrar 
-    """
-    def convierte_llave(self, llave):
-        return hashlib.sha256(llave).digest()
-

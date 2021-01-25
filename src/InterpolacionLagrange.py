@@ -1,6 +1,3 @@
-import math
-import random
-
 
 class InterpolacionLagrange:
     _primo = 208351617316091241234326746312124448251235562226470491514186331217050270460481
@@ -20,7 +17,7 @@ class InterpolacionLagrange:
             x, x_original = x_original - div * x, x
             y, y_original = y_original - div * y, y
         if numero != 1:
-            break
+            pass
         else:
             res = (x_original + MOD) % MOD
             return res
@@ -32,7 +29,7 @@ class InterpolacionLagrange:
     @return: Polinomio Li(x)
     """
 
-    def li(self,i_i, coeficientes_x):
+    def elementos_multiplicat(self,i_i, coeficientes_x):
 
         denominador = 1
         numerador = 1
@@ -66,7 +63,7 @@ class InterpolacionLagrange:
         suma = 0
 
         for i in range(0, len(x_i)):
-            pol = self.li(x_i[i], x_i) % self._primo
+            pol = self.elementos_multiplicat(x_i[i], x_i) % self._primo
             y_i[i] = y_i[i] % self._primo
             producto = (pol * y_i[i]) % self._primo
 
