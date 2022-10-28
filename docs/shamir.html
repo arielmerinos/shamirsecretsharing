@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>shamir.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>shamir.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Esta clase se encarga de manejar e integrar la técnica de shamir secret sharing scheme, haciendo uso de SHA y AES256</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">secrets</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Crypto</span> <span class="kn">import</span> <span class="n">Random</span> <span class="k">as</span> <span class="n">rnd</span>
+<span class="kn">import</span> <span class="nn">Crypto.Cipher</span> <span class="kn">as</span> <span class="nn">AES</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">from</span> <span class="nn">Encriptados</span> <span class="kn">import</span> <span class="n">Encriptador</span>
+<span class="kn">from</span> <span class="nn">InterpolacionLagrange</span> <span class="kn">import</span> <span class="n">InterpolacionLagrange</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Guardaremos en esta variable el número primo de 257 bites </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Shamir</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Este método sirve para normalizar en bloques de 32 bytes nuestro archivo</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">_primo</span> <span class="o">=</span> <span class="mi">208351617316091241234326746312124448251235562226470491514186331217050270460481</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Este método nos sirve para desnormalizar nuestro archivo.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">pad</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="p">(</span><span class="mi">32</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">%</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">32</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">%</span> <span class="mi">32</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Genera numéros aletorioss de 256 bits, siempre encargándose de que dicho número sea menor al módulo primo y que no sea 0</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">unpad</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="nb">ord</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:])]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Se encarga de encriptar un archivo y pedir la contrase-a</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">genera_coeficientes</span><span class="p">():</span>
+        <span class="n">numero_aleatorio</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">randbits</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">numero_aleatorio</span> <span class="o">&gt;</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">_primo</span> <span class="ow">and</span> <span class="n">numero_aleatorio</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">numero_aleatorio</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">randbits</span>
+
+        <span class="k">return</span> <span class="n">numero_aleatorio</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Genera una lista de coeficientes de 256 bits para un polinomio de grado t-1 y el secreto</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">encode_contrasena</span><span class="p">():</span>
+        <span class="n">contrasena</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="s2">&quot;Ingresa la contrseña para cifrar el archivo: &quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">contrasena</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Evalúa un polinomio dado &ldquo;x&rdquo; y una lista de los coeficientes del mismo con el método de Horner</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">coeficientes_del_polinomio</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">secreto</span><span class="p">):</span>
+        <span class="n">coeficientes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Shamir</span><span class="o">.</span><span class="n">genera_coeficientes</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">coeficientes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">secreto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">coeficientes</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">Metodo_de_Horner</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coeficientes</span><span class="p">):</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="n">coeficientes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coeficientes</span><span class="p">)):</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="p">(((</span><span class="n">resultado</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">_primo</span><span class="p">)</span> <span class="o">+</span> <span class="n">coeficientes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">%</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">_primo</span>
+        <span class="k">return</span> <span class="n">resultado</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>la lista_argumentos : [archivo_por_cifrar, contrasenas_guardar, necesarios, evaluaciones]
+toma los argumentos desde la terminal y los transforma en </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">escribir_txt</span><span class="p">(</span><span class="n">lista</span><span class="p">,</span> <span class="n">archivo</span><span class="p">):</span>
+        <span class="n">modo</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;w+&#39;</span>
+        <span class="n">archivo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">archivo</span><span class="p">,</span> <span class="n">modo</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">elemento</span> <span class="ow">in</span> <span class="n">lista</span><span class="p">:</span>
+            <span class="n">archivo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">elemento</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">archivo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Nos encargamos de usar el algoritmo de hashing</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cifrar</span><span class="p">(</span><span class="n">lista_argumentos</span><span class="p">):</span>
+
+        <span class="n">archivo</span><span class="p">,</span> <span class="n">contrasenas</span><span class="p">,</span> <span class="n">necesarios</span><span class="p">,</span> <span class="n">evaluaciones</span> <span class="o">=</span> <span class="n">lista_argumentos</span>
+
+        <span class="n">contrasena</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="s2">&quot;Ingresa la contrseña para cifrar el archivo: &quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Se encarga de encriptar el archivo q fantasía</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">contrasena</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">contrasena</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Toma la lista de argumentos desde la terminal, los usa para desencriptar usando el método de langrange para interpolar el polinomio original </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">enc</span> <span class="o">=</span> <span class="n">Encriptador</span><span class="p">(</span><span class="n">contrasena</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span>
+        <span class="n">enc</span><span class="o">.</span><span class="n">encrypt_file</span><span class="p">(</span><span class="n">archivo</span><span class="p">)</span>
+
+        <span class="n">K</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">contrasena</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>  <span class="c1"># contrasena con sha y en decimales</span>
+        <span class="n">coeficientes</span> <span class="o">=</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">coeficientes_del_polinomio</span><span class="p">(</span><span class="n">necesarios</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+        <span class="n">coordenadas_evaluaciones</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">evaluaciones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">punto_aleatorio</span> <span class="o">=</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">genera_coeficientes</span><span class="p">()</span>
+            <span class="n">coordenadas_evaluaciones</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">punto_aleatorio</span><span class="p">,</span> <span class="n">Shamir</span><span class="o">.</span><span class="n">Metodo_de_Horner</span><span class="p">(</span><span class="n">punto_aleatorio</span><span class="p">,</span> <span class="n">coeficientes</span><span class="p">)))</span>
+
+        <span class="n">Shamir</span><span class="o">.</span><span class="n">escribir_txt</span><span class="p">(</span><span class="n">coordenadas_evaluaciones</span><span class="p">,</span> <span class="n">contrasenas</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">descrifrar</span><span class="p">(</span><span class="n">lista_argumentos</span><span class="p">):</span>
+        <span class="n">archivo_descifrar</span><span class="p">,</span> <span class="n">contresenas</span> <span class="o">=</span> <span class="n">lista_argumentos</span>
+        
+        <span class="n">archivo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">contresenas</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">leer_archivo</span> <span class="o">=</span> <span class="n">archivo</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">cadena_contrasenas</span> <span class="o">=</span> <span class="n">leer_archivo</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">archivo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        
+        <span class="n">lista_contrasenas</span> <span class="o">=</span> <span class="p">[</span><span class="nb">eval</span><span class="p">(</span><span class="n">elemento</span><span class="p">)</span> <span class="k">for</span> <span class="n">elemento</span> <span class="ow">in</span> <span class="n">cadena_contrasenas</span><span class="p">]</span>
+        <span class="n">lista_xi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lista_contrasenas</span><span class="p">)):</span>
+            <span class="n">lista_xi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lista_contrasenas</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">lista_yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lista_contrasenas</span><span class="p">)):</span>
+            <span class="n">lista_yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lista_contrasenas</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="n">lg</span> <span class="o">=</span> <span class="n">InterpolacionLagrange</span><span class="p">()</span>
+        <span class="n">clave</span> <span class="o">=</span> <span class="n">lg</span><span class="o">.</span><span class="n">lagrangeCero</span><span class="p">(</span><span class="n">lista_xi</span><span class="p">,</span> <span class="n">lista_yi</span><span class="p">)</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="p">(</span><span class="n">clave</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;big&#39;</span><span class="p">)</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">Encriptador</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+        <span class="n">enc</span><span class="o">.</span><span class="n">decrypt_file</span><span class="p">(</span><span class="n">archivo_descifrar</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Mensaje descifrado.&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
